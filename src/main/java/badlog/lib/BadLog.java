@@ -234,23 +234,23 @@ public class BadLog {
     //     return jsonRoot.toJSONString();
     // }
 
-    // /**
-    //  * Query all queried topics and process published data.
-    //  * <p>
-    //  * This must be called before each call to log
-    //  */
-    // public void updateTopics() {
-    //     if (registerMode)
-    //         throw new InvalidModeException();
+    /**
+     * Query all queried topics and process published data.
+     * <p>
+     * This must be called before each call to log
+     */
+    public void updateTopics() {
+        if (registerMode)
+            throw new InvalidModeException();
 
-    //     topics.stream().filter((o) -> o instanceof QueriedTopic).map((o) -> (QueriedTopic) o)
-    //             .forEach(QueriedTopic::refreshValue);
+        topics.stream().filter((o) -> o instanceof QueriedTopic).map((o) -> (QueriedTopic) o)
+                .forEach(QueriedTopic::refreshValue);
 
-    //     topics.stream().filter((o) -> o instanceof SubscribedTopic).map((o) -> (SubscribedTopic) o)
-    //             .forEach((t) -> t.handlePublishedData(publishedData.get(t.getName())));
+        topics.stream().filter((o) -> o instanceof SubscribedTopic).map((o) -> (SubscribedTopic) o)
+                .forEach((t) -> t.handlePublishedData(publishedData.get(t.getName())));
 
-    //     publishedData.replaceAll((k, v) -> Optional.empty());
-    // }
+        publishedData.replaceAll((k, v) -> Optional.empty());
+    }
 
     /**
      * Write the values of each topic to the bag file.
