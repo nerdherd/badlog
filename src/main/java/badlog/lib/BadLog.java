@@ -192,65 +192,65 @@ public class BadLog {
             throw new InvalidModeException();
         registerMode = false;
 
-        String jsonHeader = genJsonHeader();
+        // String jsonHeader = genJsonHeader();
 
         // CSV Header
         StringJoiner joiner = new StringJoiner(",");
         topics.stream().map(Topic::getName).forEach((n) -> joiner.add(n));
         String header = joiner.toString();
 
-        writeLine(jsonHeader);
+        // writeLine(jsonHeader);
         writeLine(header);
 
     }
 
-    @SuppressWarnings("unchecked")
-    private String genJsonHeader() {
-        JSONObject jsonRoot = new JSONObject();
+    // @SuppressWarnings("unchecked")
+    // private String genJsonHeader() {
+    //     JSONObject jsonRoot = new JSONObject();
 
-        JSONArray jsonTopics = new JSONArray();
-        for (Topic t : topics) {
-            JSONObject topic = new JSONObject();
-            topic.put("name", t.getName());
-            topic.put("unit", t.getUnit());
-            JSONArray attrs = new JSONArray();
-            Arrays.stream(t.getAttributes()).forEach((a) -> attrs.add(a));
-            topic.put("attrs", attrs);
-            jsonTopics.add(topic);
-        }
+    //     JSONArray jsonTopics = new JSONArray();
+    //     for (Topic t : topics) {
+    //         JSONObject topic = new JSONObject();
+    //         topic.put("name", t.getName());
+    //         topic.put("unit", t.getUnit());
+    //         JSONArray attrs = new JSONArray();
+    //         Arrays.stream(t.getAttributes()).forEach((a) -> attrs.add(a));
+    //         topic.put("attrs", attrs);
+    //         jsonTopics.add(topic);
+    //     }
 
-        jsonRoot.put("topics", jsonTopics);
+    //     jsonRoot.put("topics", jsonTopics);
 
-        JSONArray jsonValues = new JSONArray();
-        namespace.stream().filter((o) -> o instanceof Value).map((v) -> (Value) v).forEach((v) -> {
-            JSONObject value = new JSONObject();
-            value.put("name", v.getName());
-            value.put("value", v.getValue());
-            jsonValues.add(value);
-        });
+    //     JSONArray jsonValues = new JSONArray();
+    //     namespace.stream().filter((o) -> o instanceof Value).map((v) -> (Value) v).forEach((v) -> {
+    //         JSONObject value = new JSONObject();
+    //         value.put("name", v.getName());
+    //         value.put("value", v.getValue());
+    //         jsonValues.add(value);
+    //     });
 
-        jsonRoot.put("values", jsonValues);
+    //     jsonRoot.put("values", jsonValues);
 
-        return jsonRoot.toJSONString();
-    }
+    //     return jsonRoot.toJSONString();
+    // }
 
-    /**
-     * Query all queried topics and process published data.
-     * <p>
-     * This must be called before each call to log
-     */
-    public void updateTopics() {
-        if (registerMode)
-            throw new InvalidModeException();
+    // /**
+    //  * Query all queried topics and process published data.
+    //  * <p>
+    //  * This must be called before each call to log
+    //  */
+    // public void updateTopics() {
+    //     if (registerMode)
+    //         throw new InvalidModeException();
 
-        topics.stream().filter((o) -> o instanceof QueriedTopic).map((o) -> (QueriedTopic) o)
-                .forEach(QueriedTopic::refreshValue);
+    //     topics.stream().filter((o) -> o instanceof QueriedTopic).map((o) -> (QueriedTopic) o)
+    //             .forEach(QueriedTopic::refreshValue);
 
-        topics.stream().filter((o) -> o instanceof SubscribedTopic).map((o) -> (SubscribedTopic) o)
-                .forEach((t) -> t.handlePublishedData(publishedData.get(t.getName())));
+    //     topics.stream().filter((o) -> o instanceof SubscribedTopic).map((o) -> (SubscribedTopic) o)
+    //             .forEach((t) -> t.handlePublishedData(publishedData.get(t.getName())));
 
-        publishedData.replaceAll((k, v) -> Optional.empty());
-    }
+    //     publishedData.replaceAll((k, v) -> Optional.empty());
+    // }
 
     /**
      * Write the values of each topic to the bag file.
