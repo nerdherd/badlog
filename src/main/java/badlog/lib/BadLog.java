@@ -69,7 +69,7 @@ public class BadLog {
      * @return the instance of BadLog
      * @throws RuntimeException if already initialized
      */
-       public static BadLog init(String path, Boolean compress) {
+    public static BadLog init(String path, Boolean compress) {
         if (instance.isPresent())
             throw new RuntimeException();
 
@@ -93,7 +93,7 @@ public class BadLog {
      * @param supplier the function to be called to return the logged data
      * @param attrs    array of topic attributes
      */
-    public static void createTopicStr(String name, String unit, Supplier<String> supplier, String... attrs) {
+    public static void createTopicStr(String name, Supplier<String> supplier) {
         if (!instance.get().registerMode)
             throw new InvalidModeException();
         if (isInNamespace(name))
@@ -101,7 +101,7 @@ public class BadLog {
 
         instance.get().checkName(name);
 
-        QueriedTopic topic = new QueriedTopic(name, unit, supplier, attrs);
+        QueriedTopic topic = new QueriedTopic(name, supplier);
         instance.get().namespace.add(topic);
         instance.get().topics.add(topic);
     }
@@ -116,9 +116,9 @@ public class BadLog {
      * @param supplier the function to be called to return the logged data
      * @param attrs    array of topic attributes
      */
-    public static void createTopic(String name, String unit, Supplier<Double> supplier, String... attrs) {
+    public static void createTopic(String name, Supplier<Double> supplier) {
         BadLog instance = BadLog.instance.get();
-        createTopicStr(name, unit, () -> instance.doubleStringFunction.apply(supplier.get()), attrs);
+        createTopicStr(name, () -> instance.doubleStringFunction.apply(supplier.get()));
     }
 
     /**
@@ -129,7 +129,7 @@ public class BadLog {
      * @param dataInferMode the method to use if data has not been published
      * @param attrs         array of topic attributes
      */
-    public static void createTopicSubscriber(String name, String unit, DataInferMode dataInferMode, String... attrs) {
+    public static void createTopicSubscriber(String name, DataInferMode dataInferMode) {
         if (!instance.get().registerMode)
             throw new InvalidModeException();
         if (isInNamespace(name))
@@ -138,7 +138,7 @@ public class BadLog {
         instance.get().checkName(name);
 
         instance.get().publishedData.put(name, Optional.empty());
-        SubscribedTopic topic = new SubscribedTopic(name, unit, dataInferMode, attrs);
+        SubscribedTopic topic = new SubscribedTopic(name, dataInferMode);
         instance.get().namespace.add(topic);
         instance.get().topics.add(topic);
     }
@@ -192,47 +192,14 @@ public class BadLog {
             throw new InvalidModeException();
         registerMode = false;
 
-        // String jsonHeader = genJsonHeader();
-
         // CSV Header
         StringJoiner joiner = new StringJoiner(",");
         topics.stream().map(Topic::getName).forEach((n) -> joiner.add(n));
         String header = joiner.toString();
 
-        // writeLine(jsonHeader);
         writeLine(header);
 
     }
-
-    // @SuppressWarnings("unchecked")
-    // private String genJsonHeader() {
-    //     JSONObject jsonRoot = new JSONObject();
-
-    //     JSONArray jsonTopics = new JSONArray();
-    //     for (Topic t : topics) {
-    //         JSONObject topic = new JSONObject();
-    //         topic.put("name", t.getName());
-    //         topic.put("unit", t.getUnit());
-    //         JSONArray attrs = new JSONArray();
-    //         Arrays.stream(t.getAttributes()).forEach((a) -> attrs.add(a));
-    //         topic.put("attrs", attrs);
-    //         jsonTopics.add(topic);
-    //     }
-
-    //     jsonRoot.put("topics", jsonTopics);
-
-    //     JSONArray jsonValues = new JSONArray();
-    //     namespace.stream().filter((o) -> o instanceof Value).map((v) -> (Value) v).forEach((v) -> {
-    //         JSONObject value = new JSONObject();
-    //         value.put("name", v.getName());
-    //         value.put("value", v.getValue());
-    //         jsonValues.add(value);
-    //     });
-
-    //     jsonRoot.put("values", jsonValues);
-
-    //     return jsonRoot.toJSONString();
-    // }
 
     /**
      * Query all queried topics and process published data.

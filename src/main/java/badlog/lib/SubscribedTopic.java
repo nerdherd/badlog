@@ -5,25 +5,13 @@ import java.util.Optional;
 class SubscribedTopic extends Topic {
 
 	private String name;
-	private String unit;
 	private DataInferMode inferMode;
-	private String[] attrs;
 
 	private String value = BadLog.DEFAULT_DATA;
 
-	public SubscribedTopic(String name, String unit, DataInferMode inferMode, String... attrs) {
+	public SubscribedTopic(String name, DataInferMode inferMode) {
 		this.name = name;
-		this.unit = unit;
 		this.inferMode = inferMode;
-		this.attrs = attrs;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public String[] getAttributes() {
-		return attrs;
 	}
 
 	public String getValue() {

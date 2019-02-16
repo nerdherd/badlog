@@ -6,30 +6,18 @@ import java.util.function.Supplier;
 class QueriedTopic extends Topic {
 	
 	private String name;
-	private String unit;
 	private Supplier<String> supplier;
-	private String[] attrs;
 	
 	private Optional<String> value;
 
-	public QueriedTopic(String name, String unit, Supplier<String> supplier, String... attrs) {
+	public QueriedTopic(String name, Supplier<String> supplier) {
 		this.name = name;
-		this.unit = unit;
 		this.supplier = supplier;
-		this.attrs = attrs;
 		
 	}
 	
 	public String getName() {
 		return name;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public String[] getAttributes() {
-		return attrs;
 	}
 	
 	public void refreshValue() {
