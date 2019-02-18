@@ -36,7 +36,7 @@ public class BadLog {
 
     private Function<Double, String> doubleStringFunction = (d) -> String.format("%.5g", d);
 
-    private BadLog(String path, Boolean compress) {
+    protected BadLog(String path, Boolean compress) {
         registerMode = true;
         namespace = new ArrayList<>();
         topics = new ArrayList<>();
